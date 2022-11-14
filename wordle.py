@@ -1,94 +1,46 @@
 # Wordle - Equipo #1
 # Integrantes: 
-#   Emmanuel López Rodríguez
-#   Maria Paula Duque Muñoz
-#   Andrés Felipe Aparicio Mestre
+# - Emmanuel López Rodríguez
+# - Maria Paula Duque Muñoz
+# - Andrés Felipe Aparicio Mestre
 
-import tkinter as tk # Se trabaja con Tkinter para la interfaz
-from palabras.getPalabras import palabras
-from palabras.getPalabras import palabraAleatoria # Sacar palabras aleatorias del lemario
+# Se trabaja con Tkinter para la interfaz
+import tkinter as tk 
+from tkinter import ttk
 
-class Juego:
-    def __init__(self):
-        self.partidas = []
+# Se usa Programación Orientada a Objetos
+from clases.juego import Juego
+from clases.partida import Partida
 
-    
+# Configuraciones de la ventana de Tkinter
 
-# Se trabajaron utilizando Programación Orientada a Objetos
-class Partida:
-    def __init__(self, dificultad):
-        # Generar palabra y separar sus carácteres para la lógica
-        # self.palabraCorrecta = [ i for i in palabraAleatoria(dificultad) ]
-        self.palabraCorrecta = [ i for i in 'ROSAS' ]
+WIDTH = 560
+HEIGHT = 672
+COLUMNS = 10
+GRIDSIZE = WIDTH/COLUMNS
 
-        print(''.join(self.palabraCorrecta))
+ventana = tk.Tk()
+ventana.title('Wordle - Equipo #1')
+ventana.geometry(f'{WIDTH}x{HEIGHT}')
+ventana.resizable(False, False)
 
-        # Parámetros predeterminados de la partida
-        self.dificultad = dificultad
-        self.ganado = False
-        self.estado = True
-        self.intento = 0
+for i in range(12):
+    for j in range(10):
+        marco = tk.Frame(ventana, highlightbackground="black", highlightthickness=1)
+        marco.grid(row=i, column=j)
+        marco.config(width=GRIDSIZE, height=GRIDSIZE)
 
-        # Guardar los intentos realizados en la partida
-        self.resultados = {}
 
-    def hacerIntento(self, palabraUser):
-        # Solo jugar si la partida está activa
-        if not self.estado: return
+# Grid del Tkinter
 
-        # Separar los carácteres de la palabra para la lógica
-        palabraUser = [ i for i in palabraUser ]
+# # Elementos gráficos del juego
+# titulo = tk.Label(ventana, text = 'Wordle - Equipo #1', font = ('Helvetica', 24, 'bold'))
+# titulo.grid(row = 0, column = 0, columnspan = 10, pady = 20)
 
-        # Lógica del juego (Los aciertos se guardan en esta lista)
-        resultadoIntento = []
+# dificultad = tk.StringVar()
+# selectDificultad = ttk.Combobox(ventana, textvariable = dificultad, font =('Helvetica', 12))
+# selectDificultad['values'] = [ f'{i} letras' for i in range(4, 9) ]
+# selectDificultad['state'] = 'readonly'
+# selectDificultad.grid(row = 1, column = 2, pady = 20)
 
-        for i in range(len(palabraUser)):
-           
-            # La letra no está en la palabra
-            if palabraUser[i] not in self.palabraCorrecta: resultadoIntento.append('⬛')
-            
-            # La letra está en la posición correcta
-            elif palabraUser[i] == self.palabraCorrecta[i]: resultadoIntento.append('🟩')
-
-            # La letra está en la palabra, pero está en la posición incorrecta
-            else: 
-                repeticionesUser = palabraUser.count(palabraUser[i])
-                repeticionesCorrecta = self.palabraCorrecta.count(palabraUser[i])
-                
-                # La letra efectivamente está en la posición incorrecta
-                if repeticionesUser <= repeticionesCorrecta: resultadoIntento.append('🟨')
-                
-                # Esta letra sobra (El usuario indicó la letra más veces de las que debería)
-                else: resultadoIntento.append('⬛')
-
-        # Guardar el resultado del intento
-        self.resultados[self.intento] = (''.join(palabraUser), ''.join(resultadoIntento))
-
-        # Verificar si se acertó la palabra (Toda la palabra deben de ser 🟩)
-        if ''.join(resultadoIntento) == '🟩'*self.dificultad:
-            self.ganado = True
-            self.estado = False
-
-        # Restar intento, si ya se acabaron los intentos, acabar la partida
-        self.intento += 1
-
-        if self.intento == 6: self.estado = False
-
-testGame = Partida(5)
-testGame.hacerIntento('XXXXX')
-testGame.hacerIntento('SSSSS')
-testGame.hacerIntento('SACOS')
-testGame.hacerIntento('RATOS')
-testGame.hacerIntento('ROCAS')
-testGame.hacerIntento('ROSAS')
-
-for key, value in testGame.resultados.items():
-    print(f'Intento {key}: Palabra {value[0]}, Resultado {value[1]}')
-
-print(testGame.ganado)
-
-# # Configuraciones de la ventana de Tkinter
-# ventana = tk.Tk()
-# ventana.geometry('480x480')
-
-# ventana.mainloop()
+ventana.mainloop()
