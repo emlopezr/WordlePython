@@ -57,3 +57,5 @@ class Partida:
         self.intento += 1
 
         if self.intento == 6: self.estado = False
+
+        return resultadoIntento
