@@ -44,7 +44,7 @@ def displayIntento(frame, btn, size, palabraUser):
         btn.pack_forget()
 
         if juego.partidaActual.ganado: messagebox.showinfo(message=f"¡¡Ganaste!!", title="Partida terminada")
-        else: messagebox.showinfo(message=f"Perdiste :(", title="Partida terminada")
+        else: messagebox.showinfo(message=f"Perdiste :(. La palabra correcta era: {juego.partidaActual.palabraCorrecta}", title="Partida terminada")
 
 # Iniciar una nueva partida de acuerda a la dificultad seleccionada
 def crearPartida():

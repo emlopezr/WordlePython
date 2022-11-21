@@ -3,7 +3,7 @@ from palabras.palabras import palabraAleatoria # Sacar palabras aleatorias del l
 class Partida:
     def __init__(self, dificultad):
         # Generar palabra y separar sus carácteres para la lógica
-        self.palabraCorrecta = [ i for i in palabraAleatoria(dificultad) ]
+        self.palabraCorrecta = palabraAleatoria(dificultad)
 
         # Parámetros predeterminados de la partida
         self.dificultad = dificultad
@@ -20,30 +20,42 @@ class Partida:
         palabraUser = [ i for i in palabraUser ]
 
         # Lógica del juego (Los aciertos se guardan en esta lista)
-        resultadoIntento = []
+        resultadoIntento = ''
+
+        # Para las pistas en amarillo, contar las pistas faltantes para esa letra en específico
+        pistasFaltantes = { i: min(self.palabraCorrecta.count(i), palabraUser.count(i)) for i in set(self.palabraCorrecta) }
 
         # Recorrer la palabra suministrada por el usuario
         for i in range(len(palabraUser)):
+            # Poner la letra en una variable para trabajar más comodamente
+            letra = palabraUser[i]
 
             # La letra no está en la palabra
-            if palabraUser[i] not in self.palabraCorrecta: resultadoIntento.append('⬛')
+            if letra not in self.palabraCorrecta: resultadoIntento += '⬛'
             
             # La letra está en la posición correcta
-            elif palabraUser[i] == self.palabraCorrecta[i]: resultadoIntento.append('🟩')
+            elif letra == self.palabraCorrecta[i]:
+                resultadoIntento += '🟩'
+                pistasFaltantes[letra] -= 1
 
             # La letra está en la palabra, pero está en la posición incorrecta
-            else: 
-                repeticionesUser = palabraUser.count(palabraUser[i])
-                repeticionesCorrecta = self.palabraCorrecta.count(palabraUser[i])
-                
-                # La letra efectivamente está en la posición incorrecta
-                if repeticionesUser <= repeticionesCorrecta: resultadoIntento.append('🟨')
-                
-                # Esta letra sobra (El usuario indicó la letra más veces de las que debería)
-                else: resultadoIntento.append('⬛')
+            else:  resultadoIntento += '⬛'
+
+        # Rellenar las pistas en amarillo faltantes
+        for i in range(len(palabraUser)):
+            # Poner la letra en una variable para trabajar más comodamente
+            letra = palabraUser[i]
+
+            # Se mete en un trycatch ya que la letra puede no estar en el diccionario (KeyError)
+            try:
+                # Reemplazar el ⬛ original por un 🟨 cuando sea necesario
+                if pistasFaltantes[letra] > 0 and resultadoIntento[i] != '🟩':
+                    resultadoIntento = resultadoIntento[:i] + '🟨' + resultadoIntento[i+1:]
+                    pistasFaltantes[letra] -= 1
+            except: continue
 
         # Verificar si se acertó la palabra (Todo el resultado debe de ser 🟩)
-        if ''.join(resultadoIntento) == '🟩'*self.dificultad:
+        if resultadoIntento == '🟩'*self.dificultad:
             # Dar por terminada la partida
             self.ganado = True
             self.estado = False
