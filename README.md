@@ -1,4 +1,4 @@
-# Segundo trabajo trabajo: Wordle 🔠
+# Segundo trabajo: Wordle 🔠
 - **Materia:** Estructuras de Datos
 - **Profesor:** Julian Moreno Cadavid
 - **Institución:** Universidad Nacional de Colombia sede Medellín
